@@ -1,0 +1,146 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: evgeny
+      comment: "Creating 'stores' table and populating dummy values"
+      changes:
+        - createTable:
+            tableName: stores
+            columns:
+              - column:
+                  name: id
+                  type: int(11)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: address
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - insert:
+            tableName: stores
+            columns:
+              - column:
+                  name: id
+                  value: "1"
+              - column:
+                  name: name
+                  value: "Store at Perimeter"
+              - column:
+                  name: address
+                  value: "1100 Hammond Dr Ste 300 Sandy Springs, GA, 30328-8153"
+        - insert:
+            tableName: stores
+            columns:
+              - column:
+                  name: id
+                  value: "2"
+              - column:
+                  name: name
+                  value: "The Prado"
+              - column:
+                  name: address
+                  value: "5630 Roswell Rd Sandy Springs, GA, 30342-1102"
+        - insert:
+            tableName: stores
+            columns:
+              - column:
+                  name: id
+                  value: "3"
+              - column:
+                  name: name
+                  value: "Oglethorpe Crossing"
+              - column:
+                  name: address
+                  value: "3435 Ashford Dunwoody Rd NE Brookhaven, GA, 30319-2546"
+        - insert:
+            tableName: stores
+            columns:
+              - column:
+                  name: id
+                  value: "4"
+              - column:
+                  name: name
+                  value: "Dunwoody Hall Shopping Center"
+              - column:
+                  name: address
+                  value: "5550 Chamblee Dunwoody Rd Dunwoody, GA, 30338-4111"
+        - insert:
+            tableName: stores
+            columns:
+              - column:
+                  name: id
+                  value: "5"
+              - column:
+                  name: name
+                  value: "Abernathy Square SC"
+              - column:
+                  name: address
+                  value: "6615 Roswell Rd Sandy Springs, GA, 30328-3190"
+        - insert:
+            tableName: stores
+            columns:
+              - column:
+                  name: id
+                  value: "6"
+              - column:
+                  name: name
+                  value: "Trowbridge Crossing"
+              - column:
+                  name: address
+                  value: "7525 Roswell Rd Sandy Springs, GA, 30350-8500"
+        - insert:
+            tableName: stores
+            columns:
+              - column:
+                  name: id
+                  value: "7"
+              - column:
+                  name: name
+                  value: "Chastain Square"
+              - column:
+                  name: address
+                  value: "4279 Roswell Rd NE Ste 300 Atlanta, GA, 30342-3769"
+        - insert:
+            tableName: stores
+            columns:
+              - column:
+                  name: id
+                  value: "8"
+              - column:
+                  name: name
+                  value: "Town Brookhaven"
+              - column:
+                  name: address
+                  value: "104 Town Blvd Ste A100 Brookhaven, GA, 30319-3146"
+        - insert:
+            tableName: stores
+            columns:
+              - column:
+                  name: id
+                  value: "9"
+              - column:
+                  name: name
+                  value: "Shallowford Exchange"
+              - column:
+                  name: address
+                  value: "2562 Shallowford Rd NE Atlanta, GA, 30345-1202"
+        - insert:
+            tableName: stores
+            columns:
+              - column:
+                  name: id
+                  value: "10"
+              - column:
+                  name: name
+                  value: "Lenox Marketplace"
+              - column:
+                  name: address
+                  value: "3535 Peachtree Rd NE Atlanta, GA, 30326-3287"
