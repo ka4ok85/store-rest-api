@@ -5,25 +5,25 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Store;
+import com.example.exception.ResourceNotFoundException;
 import com.example.repository.StoreRepository;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
 
 @RestController("StoreControllerV1")
 @RequestMapping("/v1/")
-@Api(value = "stores", description = "Store API")
+@io.swagger.annotations.Api(value = "stores", description = "Store API")
 public class StoreController {
 
 	@Autowired
 	private StoreRepository storeRepository;
 	
 	@RequestMapping(value = "/stores", method = RequestMethod.GET)
-	@ApiOperation(value = "Retrieves Stores", notes = "Retrieves Stores using sort and page/size parameters", response = Store.class, responseContainer = "Page")
+	@io.swagger.annotations.ApiOperation(value = "Retrieves Stores", notes = "Retrieves Stores using sort and page/size parameters", response = Store.class, responseContainer = "Page")
 	public ResponseEntity<Page<Store>> getStores(Pageable pageable) {
 		Page<Store> stores = storeRepository.findAll(pageable);
 		
@@ -31,4 +31,14 @@ public class StoreController {
 	}
 	
 
+	@RequestMapping(value = "/stores/{storeId}", method = RequestMethod.GET)
+	@io.swagger.annotations.ApiOperation(value = "Retrieves Single Store", notes = "Retrieves Singe Store using ID", response = Store.class)
+	public ResponseEntity<Store> getStore(@PathVariable Long storeId) {
+		Store store = storeRepository.findOne(storeId);
+		if (store == null) {
+			throw new ResourceNotFoundException("Store with ID = " + storeId + " not found");
+		}
+		
+		return new ResponseEntity<>(store, HttpStatus.OK);
+	}
 }

@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-@Configuration
+//@Configuration
 //@EnableWebMvc // don't needed, we want to use default MVC configuration
 public class WebMvcInitializer extends WebMvcConfigurerAdapter {
  
