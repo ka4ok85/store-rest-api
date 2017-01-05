@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController("TestControllerV1")
 @RequestMapping("/v1/")
-@io.swagger.annotations.Api(value = "tests", description = "Tests API")
+@io.swagger.annotations.Api(value = "tests", description = "Tests API", tags = "tests")
 public class TestController {
 
 	@RequestMapping(value = "/tests", method = RequestMethod.GET, produces = "application/json")

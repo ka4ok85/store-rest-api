@@ -4,8 +4,12 @@ import com.fasterxml.classmate.TypeResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.ResponseMessageBuilder;
+import springfox.documentation.schema.ModelRef;
+
 import static springfox.documentation.builders.PathSelectors.*;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
@@ -74,6 +78,13 @@ public class Swagger2Config {
 	            .paths(or(regex(".*v1.*")))
 	            .build()
 	            .apiInfo(apiInfo())
+	            .useDefaultResponseMessages(false)
+	            .globalResponseMessage(RequestMethod.GET,
+	                newArrayList(new ResponseMessageBuilder()
+	                    .code(500)
+	                    .message("Internal Server Error")
+	                    .responseModel(new ModelRef("Error"))
+	                    .build()))
 	            .securitySchemes(newArrayList(apiKey()))
 	            .securityContexts(newArrayList(securityContext()));
 	}

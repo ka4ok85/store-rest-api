@@ -10,13 +10,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.dto.error.ErrorDetail;
 import com.example.entity.Store;
 import com.example.exception.ResourceNotFoundException;
 import com.example.repository.StoreRepository;
 
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
+
 @RestController("StoreControllerV1")
 @RequestMapping("/v1/")
-@io.swagger.annotations.Api(value = "stores", description = "Store API")
+@io.swagger.annotations.Api(value = "stores", description = "Store API", tags = "stores")
 public class StoreController {
 
 	@Autowired
@@ -24,6 +28,9 @@ public class StoreController {
 	
 	@RequestMapping(value = "/stores", method = RequestMethod.GET)
 	@io.swagger.annotations.ApiOperation(value = "Retrieves Stores", notes = "Retrieves Stores using sort and page/size parameters", response = Store.class, responseContainer = "Page")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Returns List of Stores", responseContainer = "List", response = Store.class)
+	})
 	public ResponseEntity<Page<Store>> getStores(Pageable pageable) {
 		Page<Store> stores = storeRepository.findAll(pageable);
 		
@@ -33,6 +40,12 @@ public class StoreController {
 
 	@RequestMapping(value = "/stores/{storeId}", method = RequestMethod.GET)
 	@io.swagger.annotations.ApiOperation(value = "Retrieves Single Store", notes = "Retrieves Singe Store using ID", response = Store.class)
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Returns Store", response = Store.class),
+		    @ApiResponse(code = 401, message = "Unauthorized"),
+		    @ApiResponse(code = 403, message = "Forbidden"),
+		    @ApiResponse(code = 404, message = "Store not found", response = ErrorDetail.class)
+	})
 	public ResponseEntity<Store> getStore(@PathVariable Long storeId) {
 		Store store = storeRepository.findOne(storeId);
 		if (store == null) {
