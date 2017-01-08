@@ -1,16 +1,23 @@
 package com.example.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
@@ -36,6 +43,11 @@ public class Store {
     @NotEmpty
     @Size(max=255)
     private String address;
+    
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="store_id")
+    private Set<Storelocation> storelocations = new HashSet<Storelocation>();
 
 	public Store() {
 	}
@@ -64,12 +76,18 @@ public class Store {
 		this.address = address;
 	}
 
+	public Set<Storelocation> getStorelocations() {
+		return storelocations;
+	}
+
+	public void setStorelocations(Set<Storelocation> storelocations) {
+		this.storelocations = storelocations;
+	}
+
 	@Override
 	public String toString() {
 		return "Store [id=" + id + ", name=" + name + ", address=" + address + "]";
 	}
 
-   
-    
     
 }

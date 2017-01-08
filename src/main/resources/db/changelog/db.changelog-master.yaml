@@ -144,3 +144,174 @@ databaseChangeLog:
               - column:
                   name: address
                   value: "3535 Peachtree Rd NE Atlanta, GA, 30326-3287"
+  - changeSet:
+      id: 2
+      author: evgeny
+      comment: "Adding more dummy 'stores'"
+      changes:
+        - sqlFile:
+            path: additionalStores.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            dbms: mysql
+  - changeSet:
+      id: 3
+      author: evgeny
+      comment: "Creating 'store_locations' table"
+      changes:
+        - createTable:
+            tableName: store_locations
+            columns:
+              - column:
+                  name: id
+                  type: int(11)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: store_id
+                  type: int(11)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: shelf
+                  type: int(11)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: slot
+                  type: int(11)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: barcode
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseColumnNames: store_id
+            baseTableName: store_locations
+            constraintName: fk_store_2
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: stores
+        - addUniqueConstraint:
+            columnNames: store_id, shelf, slot
+            constraintName: store_locations_unique
+            tableName: store_locations
+  - changeSet:
+      id: 4
+      author: evgeny
+      comment: "Adding dummy 'store_locations' values"
+      changes:
+        - sqlFile:
+            path: storeLocations.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            dbms: mysql
+  - changeSet:
+      id: 5
+      author: evgeny
+      comment: "Creating 'users' table and adding fake users"
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: int(11)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: login
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+        - sqlFile:
+            path: users.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            dbms: mysql
+  - changeSet:
+      id: 6
+      author: evgeny
+      comment: "Creating 'users' table and adding fake users"
+      changes:
+        - addUniqueConstraint:
+            columnNames: login
+            constraintName: user_login_unique
+            tableName: users
+        - createTable:
+            tableName: user_in_stores
+            columns:
+              - column:
+                  name: id
+                  type: int(11)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: int(11)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: store_id
+                  type: int(11)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_admin
+                  type: tinyint(1)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: user_in_stores
+            constraintName: fk_user_1
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: users
+        - addForeignKeyConstraint:
+            baseColumnNames: store_id
+            baseTableName: user_in_stores
+            constraintName: fk_store_1
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: stores
+        - addUniqueConstraint:
+            columnNames: user_id, store_id, is_admin
+            constraintName: user_in_store_unique
+            tableName: user_in_stores
+        - sqlFile:
+            path: userInStores.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            dbms: mysql
