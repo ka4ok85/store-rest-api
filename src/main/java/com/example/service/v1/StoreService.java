@@ -24,4 +24,7 @@ public class StoreService {
 		return stores;
 	}
 	
+	public Store findOne(Long storeId) {
+		return storeRepository.findOne(storeId);
+	}
 }

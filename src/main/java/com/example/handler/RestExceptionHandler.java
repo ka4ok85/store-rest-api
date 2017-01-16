@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -27,4 +28,18 @@ public class RestExceptionHandler {
 		
 		return new ResponseEntity<>(errorDetail, HttpStatus.NOT_FOUND);
 	} 
+	
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	public ResponseEntity<?> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException httpRequestMethodNotSupportedException, HttpServletRequest request) {
+		
+		ErrorDetail errorDetail = new ErrorDetail();
+		errorDetail.setDetail(httpRequestMethodNotSupportedException.getMessage());
+		errorDetail.setDeveloperMessage(httpRequestMethodNotSupportedException.getClass().getName());
+		errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
+		errorDetail.setTimestamp(new Date().getTime());
+		errorDetail.setTitle("Resource not found");
+
+		return new ResponseEntity<>(errorDetail, HttpStatus.NOT_FOUND);
+	} 
+	
 }

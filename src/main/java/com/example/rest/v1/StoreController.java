@@ -39,7 +39,7 @@ public class StoreController {
 		return new ResponseEntity<>(stores, HttpStatus.OK);
 	}
 	
-/*
+
 	@RequestMapping(value = "/stores/{storeId}", method = RequestMethod.GET)
 	@io.swagger.annotations.ApiOperation(value = "Retrieves Single Store", notes = "Retrieves Singe Store using ID", response = Store.class)
 	@ApiResponses(value = { 
@@ -49,12 +49,12 @@ public class StoreController {
 		    @ApiResponse(code = 404, message = "Store not found", response = ErrorDetail.class)
 	})
 	public ResponseEntity<Store> getStore(@PathVariable Long storeId) {
-		Store store = storeRepository.findOne(storeId);
+		Store store = storeService.findOne(storeId);
 		if (store == null) {
 			throw new ResourceNotFoundException("Store with ID = " + storeId + " not found");
 		}
 		
 		return new ResponseEntity<>(store, HttpStatus.OK);
 	}
-	*/
+
 }
