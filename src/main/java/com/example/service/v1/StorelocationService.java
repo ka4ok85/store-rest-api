@@ -13,9 +13,16 @@ public class StorelocationService {
 	@Autowired
 	private StorelocationRepository storelocationRepository;
 	
-	public Page<Storelocation> getStorelocations(Pageable pageable, Long StoreId) {
+	public Page<Storelocation> getStorelocations(Pageable pageable, Long storeId) {
 		Page<Storelocation> storelocations;
-		storelocations = storelocationRepository.findByStoreId(pageable, StoreId);
+		storelocations = storelocationRepository.findByStoreId(pageable, storeId);
+		
+		return storelocations;
+	}
+
+	public Page<Storelocation> getStorelocations(Pageable pageable, Long storeId, Long shelf) {
+		Page<Storelocation> storelocations;
+		storelocations = storelocationRepository.findByStoreIdAndShelf(pageable, storeId, shelf);
 		
 		return storelocations;
 	}

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,4 +43,16 @@ public class RestExceptionHandler {
 		return new ResponseEntity<>(errorDetail, HttpStatus.NOT_FOUND);
 	} 
 	
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException accessDeniedException, HttpServletRequest request) {
+		
+		ErrorDetail errorDetail = new ErrorDetail();
+		errorDetail.setDetail(accessDeniedException.getMessage());
+		errorDetail.setDeveloperMessage(accessDeniedException.getClass().getName());
+		errorDetail.setStatus(HttpStatus.FORBIDDEN.value());
+		errorDetail.setTimestamp(new Date().getTime());
+		errorDetail.setTitle("Forbidden");
+
+		return new ResponseEntity<>(errorDetail, HttpStatus.FORBIDDEN);
+	}
 }

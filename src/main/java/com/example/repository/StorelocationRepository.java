@@ -8,5 +8,6 @@ import com.example.entity.Storelocation;
 
 public interface StorelocationRepository extends PagingAndSortingRepository<Storelocation, Long>{
 	Page<Storelocation> findByStoreId(Pageable pageable, Long StoreId);
+	Page<Storelocation> findByStoreIdAndShelf(Pageable pageable, Long storeId, Long shelf);
 
 }

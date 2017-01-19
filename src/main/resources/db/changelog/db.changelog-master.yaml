@@ -315,3 +315,161 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             dbms: mysql
+  - changeSet:
+      id: 7
+      author: evgeny
+      comment: "Creating 'products' table and adding fake products"
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: int(11)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: sku
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: int(11)
+                  constraints:
+                    nullable: false
+        - sqlFile:
+            path: products.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            dbms: mysql
+  - changeSet:
+      id: 8
+      author: evgeny
+      comment: "Creating 'product_in_stores' table and adding fake rows"
+      changes:
+        - createTable:
+            tableName: product_in_stores
+            columns:
+              - column:
+                  name: id
+                  type: int(11)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: int(11)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: store_id
+                  type: int(11)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: int(11)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: product_in_stores
+            constraintName: fk_product_1
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: products
+        - addForeignKeyConstraint:
+            baseColumnNames: store_id
+            baseTableName: product_in_stores
+            constraintName: fk_store_3
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: stores
+        - addUniqueConstraint:
+            columnNames: product_id, store_id
+            constraintName: product_in_store_unique
+            tableName: product_in_stores
+        - sqlFile:
+            path: product_in_stores.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            dbms: mysql
+  - changeSet:
+      id: 9
+      author: evgeny
+      comment: "Creating 'product_locations' table and adding fake rows"
+      changes:
+        - createTable:
+            tableName: product_locations
+            columns:
+              - column:
+                  name: id
+                  type: int(11)
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: product_id
+                  type: int(11)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: store_id
+                  type: int(11)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: store_location_id
+                  type: int(11)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: int(11)
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseColumnNames: product_id
+            baseTableName: product_locations
+            constraintName: fk_product_2
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: products
+        - addForeignKeyConstraint:
+            baseColumnNames: store_id
+            baseTableName: product_locations
+            constraintName: fk_store_4
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: stores
+        - addForeignKeyConstraint:
+            baseColumnNames: store_location_id
+            baseTableName: product_locations
+            constraintName: fk_store_location_1
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: store_locations
+        - addUniqueConstraint:
+            columnNames: product_id, store_id, store_location_id
+            constraintName: product_locations_unique
+            tableName: product_locations
+        - sqlFile:
+            path: product_locations.sql
+            relativeToChangelogFile: true
+            splitStatements: true
+            dbms: mysql
