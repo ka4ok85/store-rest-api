@@ -26,4 +26,21 @@ public class StorelocationService {
 		
 		return storelocations;
 	}
+
+	public Page<Storelocation> getStorelocations(Pageable pageable, Long storeId, Boolean isAvailable) {
+		Page<Storelocation> storelocations;
+		if (isAvailable == true) {
+			storelocations = storelocationRepository.findIsAvailableByStoreId(pageable, storeId);
+		} else {
+			storelocations = storelocationRepository.findIsNotAvailableByStoreId(pageable, storeId);
+		}
+		
+		return storelocations;
+	}
+
+	public Storelocation getStorelocation(Long storeLocationId, Long storeId) {
+		Storelocation storelocation = storelocationRepository.findByIdAndStoreId(storeLocationId, storeId);
+		
+		return storelocation;
+	}
 }

@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.entity.Product;
 import com.example.entity.Store;
 import com.example.entity.Storelocation;
+import com.example.exception.ResourceNotFoundException;
 import com.example.security.UserDetailsServiceImplementation;
+import com.example.service.v1.ProductService;
 import com.example.service.v1.StoreService;
 import com.example.service.v1.StorelocationService;
 
@@ -26,6 +29,9 @@ import io.swagger.annotations.ApiResponses;
 @io.swagger.annotations.Api(value = "storelocations", description = "Storelocation API", tags = "storelocations")
 public class StorelocationController {
 
+	@Autowired
+	private ProductService productService;
+	
 	@Autowired
 	private StorelocationService storelocationService;
 
@@ -42,13 +48,11 @@ public class StorelocationController {
 		Long storeId = userDetailsService.getStoreId();
 		Page<Storelocation> storelocations;
 		if (shelf == null) {
-			if (isAvailable == null || isAvailable == false) {
-				// return only w/o products assigned
-				// TODO:
-				storelocations = null;
-			} else {
+			if (isAvailable == null) {
 				// return all
 				storelocations = storelocationService.getStorelocations(pageable, storeId);
+			} else {
+				storelocations = storelocationService.getStorelocations(pageable, storeId, isAvailable);
 			}
 		} else {
 			// return only for selected shelf
@@ -56,6 +60,47 @@ public class StorelocationController {
 		}
 
 		return new ResponseEntity<>(storelocations, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/storelocations/{storeLocationId}", method = RequestMethod.GET)
+	@io.swagger.annotations.ApiOperation(value = "Retrieves Storelocation within Store", notes = "Retrieves Storelocation within Store.", response = Storelocation.class)
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Returns Storelocation for Store", response = String.class)
+	})
+	public ResponseEntity<Storelocation> getStorelocation(@PathVariable(value = "storeLocationId", required = true) Long storeLocationId) {
+		Long storeId = userDetailsService.getStoreId();
+		Storelocation storelocation;
+		
+		storelocation = storelocationService.getStorelocation(storeLocationId, storeId);
+		if (storelocation == null) {
+			throw new ResourceNotFoundException("Storelocation with ID = " + storeLocationId + " not found");
+		} else {
+			return new ResponseEntity<>(storelocation, HttpStatus.OK);
+		}
+	}
+	
+	@RequestMapping(value = "/storelocations/{storeLocationId}/products", method = RequestMethod.GET)
+	@io.swagger.annotations.ApiOperation(value = "Retrieves List of Storelocation's Products within Store", notes = "Retrieves List of Storelocation's Products within Store.", response = Product.class, responseContainer = "Page")
+	@ApiResponses(value = { 
+			@ApiResponse(code = 200, message = "Returns List of Storelocation's Products for Store", responseContainer = "List", response = Product.class)
+	})
+	public ResponseEntity<Page<Product>> getStorelocationProducts(@PathVariable(value = "storeLocationId", required = true) Long storeLocationId, Pageable pageable) {
+		Long storeId = userDetailsService.getStoreId();
+		Page<Product> products;
+		
+		products = productService.getProductsByStoreIdAndStoreLocationId(pageable, storeLocationId, storeId);
+		
+		return new ResponseEntity<>(products, HttpStatus.OK);
+		/*
+		Storelocation storelocation;
+		
+		storelocation = storelocationService.getStorelocation(storeLocationId, storeId);
+		if (storelocation == null) {
+			throw new ResourceNotFoundException("Storelocation with ID = " + storeLocationId + " not found");
+		} else {
+			return new ResponseEntity<>(storelocation, HttpStatus.OK);
+		}
+		*/
 	}
 	
 	@RequestMapping(value = "/storelocations/{storeLocationId}", method = RequestMethod.DELETE)
@@ -67,7 +112,7 @@ public class StorelocationController {
 	public ResponseEntity<Object> deleteStorelocation(@PathVariable(value = "storeLocationId", required = true) Long storeLocationId) {
 		Long storeId = userDetailsService.getStoreId();
 
-		//TOTO: implementation
+		//TODO: implementation
 		return new ResponseEntity<>(null, HttpStatus.OK);
 	}	
 

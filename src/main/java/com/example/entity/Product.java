@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
@@ -48,10 +49,12 @@ public class Product {
     
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="product_id", referencedColumnName="id")
+    @JsonIgnore
     private Set<Productinstore> productinstores = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "product_id", referencedColumnName="id")
+    @JsonIgnore
     private Set<Productlocation> productlocations = new HashSet<>();
 
 	public Long getId() {
