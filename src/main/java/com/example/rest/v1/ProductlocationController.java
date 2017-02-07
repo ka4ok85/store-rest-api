@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.dto.productlocation.ProductlocationWithProductAndStorelocationWrapper;
 import com.example.entity.Product;
 import com.example.entity.Productlocation;
 import com.example.entity.Storelocation;
@@ -39,25 +40,21 @@ public class ProductlocationController {
 	@ApiResponses(value = { 
 			@ApiResponse(code = 200, message = "Returns List of Productlocations for Store", responseContainer = "List", response = Productlocation.class)
 	})
-	public ResponseEntity<List<Productlocation>> getProductlocations(@RequestParam(value = "id", required = false) String idList, Pageable pageable) {
+	public ResponseEntity<List<ProductlocationWithProductAndStorelocationWrapper>> getProductlocations(@RequestParam(value = "storelocationid", required = false) String idList, Pageable pageable) {
 
-		//Long storeId = userDetailsService.getStoreId();
-		List<Productlocation> productlocations;
-		//if (idList == null) {
-			//productlocations = productlocationService.getStorelocations(pageable, storeId, isAvailable);
-			//productlocations = null;
-		//} else {
+		Long storeId = userDetailsService.getStoreId();
+		List<ProductlocationWithProductAndStorelocationWrapper> productlocations;
+		if (idList == null) {
+			return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+		} else {
 			// return only for provided List of IDs
-			
-			
-			//List<String> ids = Arrays.asList(idList.split("\\s*,\\s*"));
 			List<Long> ids = new ArrayList<Long>();
 			for (String s : idList.split(",")) {
 				ids.add(Long.parseLong(s));
 			}
 			
-			productlocations = productlocationService.findByIdIn(ids);
-		//}
+			productlocations = productlocationService.findByStoreIdAndStorelocationId(storeId, ids);
+		}
 
 		return new ResponseEntity<>(productlocations, HttpStatus.OK);
 	}

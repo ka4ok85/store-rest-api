@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.dto.productlocation.ProductlocationWithProductAndStorelocationWrapper;
 import com.example.entity.Productlocation;
 import com.example.repository.ProductlocationRepository;
 
@@ -22,12 +23,14 @@ public class ProductlocationService {
 		return productlocations;
 	}
 
-	public List<Productlocation> findByIdIn(List<Long> idList) {
-		List<Productlocation> productlocations;
-		productlocations = productlocationRepository.findByIdIn(idList);
+	public List<ProductlocationWithProductAndStorelocationWrapper> findByStoreIdAndStorelocationId(Long storeId, List<Long> storeLocationIdList) {
+		List<ProductlocationWithProductAndStorelocationWrapper> productlocations;
+		productlocations = productlocationRepository.findByStoreIdAndStorelocationId(storeId, storeLocationIdList);
 		
 		return productlocations;
 	}
+	
+	
 	
 
 }
