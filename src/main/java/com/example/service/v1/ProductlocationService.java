@@ -1,5 +1,7 @@
 package com.example.service.v1;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,5 +21,13 @@ public class ProductlocationService {
 		
 		return productlocations;
 	}
+
+	public List<Productlocation> findByIdIn(List<Long> idList) {
+		List<Productlocation> productlocations;
+		productlocations = productlocationRepository.findByIdIn(idList);
+		
+		return productlocations;
+	}
+	
 
 }

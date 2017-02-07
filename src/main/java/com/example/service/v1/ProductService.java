@@ -36,4 +36,18 @@ public class ProductService {
 		
 		return products;
 	}
+	
+	public Page<Product> getProductsByStoreId(Pageable pageable, Long storeId) {
+		Page<Product> products;
+		products = productRepository.findAllProductsInStore(pageable, storeId);
+		
+		return products;
+	}
+	
+	public Page<Product> getProductsNotInStore(Pageable pageable, Long storeId) {
+		Page<Product> products;
+		products = productRepository.findAllProductsNotInStore(pageable, storeId);
+		
+		return products;
+	}
 }

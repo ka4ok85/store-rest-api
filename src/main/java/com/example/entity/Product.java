@@ -6,10 +6,14 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
+import javax.persistence.NamedAttributeNode;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -22,6 +26,22 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 @Entity
 @Table(name="products")
+@NamedEntityGraphs({
+    @NamedEntityGraph(
+        name = "basicProduct",
+        includeAllAttributes=false,
+        attributeNodes = {
+            @NamedAttributeNode("name"),
+            @NamedAttributeNode("quantity")
+        }
+    ),
+    @NamedEntityGraph(
+        name = "fullProduct",
+        attributeNodes = {
+            @NamedAttributeNode(value = "productinstores", subgraph = "basicProduct")
+        }
+    )
+})
 public class Product {
     @JsonView(com.example.entity.Product.class)
     @Id
@@ -47,12 +67,12 @@ public class Product {
     @NotNull
     private Long quantity;
     
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name="product_id", referencedColumnName="id")
     @JsonIgnore
     private Set<Productinstore> productinstores = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", referencedColumnName="id")
     @JsonIgnore
     private Set<Productlocation> productlocations = new HashSet<>();
